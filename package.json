@@ -1,6 +1,6 @@
 {
   "name": "hiroshima",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Opinionated routing library",
   "main": "index.js",
   "scripts": {
