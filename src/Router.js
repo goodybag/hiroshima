@@ -16,6 +16,14 @@ export default class Router {
         return this;
     }
 
+    else(handler) {
+        this.children.push(function(segments) {
+            return new MatchResult([handler], {});
+        });
+
+        return this;
+    }
+
     run(segments) {
         for (let child of this.children) {
             let result = child(segments);

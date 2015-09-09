@@ -86,4 +86,26 @@ describe('Router', function() {
             expect(router.match('/foo').components).toEqual([]);
         });
     });
+
+    describe('.else', function() {
+        const router = new Router();
+
+        router.index('foo');
+        router.dir('something').index('bar');
+        router.else('fallback');
+
+        it('should not fallback postmaturely', function() {
+            expect(router.match('/').components).toEqual(['foo']);
+            expect(router.match('/something').components).toEqual(['bar']);
+        });
+
+        it('should fallback when root route fails', function() {
+            expect(router.match('/foo').components).toEqual(['fallback']);
+        });
+
+        it('should fallback for nested routes', function() {
+            expect(router.match('/something/bar').components).toEqual(['fallback']);
+            expect(router.match('/foo/quux').components).toEqual(['fallback']);
+        });
+    });
 });
