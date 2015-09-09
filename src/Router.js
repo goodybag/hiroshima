@@ -26,6 +26,8 @@ export default class Router {
                 return result;
             }
         }
+
+        return new FailedMatchResult([], {});
     }
 
     dir(segment) {
