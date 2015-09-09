@@ -1,0 +1,89 @@
+/* globals describe, it, context */
+import expect from 'expect';
+
+import Router from '../src/Router';
+
+class MainComponent {
+    static route(router) {
+        router.dir('locations').param('location_id').use(LocationComponent);
+    }
+}
+
+class LocationComponent {
+    static route(router) {
+        router.index(LocationMenuComponent);
+        router.dir('info').index(LocationInfoComponent);
+        router.dir('reviews').index(LocationReviewsComponent);
+    }
+}
+
+class LocationMenuComponent {}
+class LocationInfoComponent {}
+class LocationReviewsComponent {}
+
+describe('Router', function() {
+    context('when empty', function() {
+        const router = new Router();
+
+        it('should not match anything', function() {
+            const result = router.match('/locations/111/info');
+
+            expect(result.components).toEqual([]);
+            expect(result.params).toEqual({});
+        });
+    });
+
+    context('when a root handler is defined', function() {
+        const router = new Router().index('the handler value');
+
+        it('should match that handler on root', function() {
+            const result = router.match('/');
+
+            expect(result.components).toEqual(['the handler value']);
+        });
+
+        it('should not match that handler on other routes', function() {
+            const result = router.match('/foo');
+
+            expect(result.components).toEqual([]);
+        });
+    });
+
+    it('should handle routes', function() {
+        const router = new Router().call(function(router) {
+            router.use(MainComponent);
+        });
+
+        const result = router.match('/locations/111/info');
+
+        expect(result.components).toEqual([
+            MainComponent,
+            LocationComponent,
+            LocationInfoComponent
+        ]);
+
+        expect(result.params.location_id).toBe('111');
+    });
+
+    describe('.param', function() {
+        const router = new Router();
+
+        router.param('p', function(arg) {
+            const result = parseInt(arg);
+
+            if (isNaN(result)) {
+                return null;
+            } else {
+                return result;
+            }
+        }).index('sentinel');
+
+        it('should parse path segments', function() {
+            expect(router.match('/123').params.p).toBe(123);
+        });
+
+        it('should skip routes when the parser fails', function() {
+            expect(router.match('/foo').components).toEqual([]);
+        });
+    });
+});
