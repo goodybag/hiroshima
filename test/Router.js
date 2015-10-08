@@ -108,4 +108,24 @@ describe('Router', function() {
             expect(router.match('/foo/quux').components).toEqual(['fallback']);
         });
     });
+
+    describe('.where', function() {
+        const router = new Router();
+
+        router.dir('foo').where({method: 'get'}).index('GET /foo');
+        router.dir('bar').where(({query}) => query.baz === 'quux').index('GET /bar?baz=quux');
+
+        it('should work with object matchers', function() {
+            expect(router.match('/foo', {method: 'get'}).components).toEqual(['GET /foo']);
+            expect(router.match('/foo', {method: 'post'}).components).toEqual([]);
+            expect(router.match('/foo', {}).components).toEqual([]);
+        });
+
+        it('should skip routes when the parser fails', function() {
+            expect(router.match('/bar', {query: {baz: 'quux'}}).components).toEqual(['GET /bar?baz=quux']);
+            expect(router.match('/bar', {query: {baz: 'foo'}}).components).toEqual([]);
+            expect(router.match('/bar', {query: {}}).components).toEqual([]);
+            expect(() => router.match('/bar')).toThrow(TypeError);
+        });
+    });
 });

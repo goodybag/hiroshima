@@ -1,11 +1,31 @@
+import lodash from 'lodash';
+
 export default class Router {
     constructor() {
         this.handler = null;
         this.children = [];
     }
 
+    where(predicate) {
+        if (typeof predicate === 'object') {
+            predicate = lodash.matches(predicate);
+        }
+
+        const router = new Router();
+
+        this.children.push(function(segments, data) {
+            if (predicate(data)) {
+                return router.run(segments, data);
+            } else {
+                return new FailedMatchResult();
+            }
+        });
+
+        return router;
+    }
+
     index(handler) {
-        this.children.push(function(segments) {
+        this.children.push(function(segments, data) {
             if (segments.length === 0) {
                 return new MatchResult([handler], {});
             } else {
@@ -17,16 +37,16 @@ export default class Router {
     }
 
     else(handler) {
-        this.children.push(function(segments) {
+        this.children.push(function(segments, data) {
             return new MatchResult([handler], {});
         });
 
         return this;
     }
 
-    run(segments) {
+    run(segments, data) {
         for (let child of this.children) {
-            let result = child(segments);
+            let result = child(segments, data);
 
             if (result instanceof FailedMatchResult) {
                 continue;
@@ -41,9 +61,9 @@ export default class Router {
     dir(segment) {
         const router = new Router();
 
-        this.children.push(function(segments) {
+        this.children.push(function(segments, data) {
             if (segment === segments[0]) {
-                return router.run(segments.slice(1));
+                return router.run(segments.slice(1), data);
             } else {
                 return new FailedMatchResult();
             }
@@ -69,12 +89,13 @@ export default class Router {
 
         const router = new Router();
 
-        this.children.push(function(segments) {
+        this.children.push(function(segments, data) {
             if (segments[0] != null) {
                 const result = parser(segments[0]);
 
                 if (result != null) {
-                    return router.run(segments.slice(1)).withParam(param, parser(segments[0]));
+                    return router.run(segments.slice(1), data)
+                        .withParam(param, parser(segments[0]));
                 } else {
                     return new FailedMatchResult();
                 }
@@ -106,10 +127,10 @@ export default class Router {
         return this.group(handler).call(handler.route || function() {});
     }
 
-    match(path) {
+    match(path, data = {}) {
         const segments = path.split('/').filter(x => x);
 
-        const result = this.run(segments);
+        const result = this.run(segments, data);
 
         if (result) {
             return result;
