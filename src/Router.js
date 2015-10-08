@@ -1,6 +1,6 @@
 import lodash from 'lodash';
 
-export default class Router {
+export class Router {
     constructor() {
         this.handler = null;
         this.children = [];
