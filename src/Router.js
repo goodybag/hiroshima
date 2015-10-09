@@ -108,7 +108,7 @@ export class Router {
     }
 
     call(fn) {
-        fn(this);
+        fn.call(this, this);
 
         return this;
     }
