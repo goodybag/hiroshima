@@ -1,7 +1,7 @@
 /* globals describe, it, context */
 import expect from 'expect';
 
-import {Router} from '../src/Router';
+import {Router} from '../src/router';
 
 class MainComponent {
     static route(router) {
