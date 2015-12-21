@@ -128,4 +128,72 @@ describe('Router', function() {
             expect(() => router.match('/bar')).toThrow(TypeError);
         });
     });
+
+    describe('routing helpers', function() {
+        const router = new Router();
+
+        router.get('list');
+        router.post('create');
+        router.param('id').call(router => {
+            router.get('show');
+            router.put('replace');
+            router.patch('update');
+            router.delete('remove');
+            router.options('all of them');
+        });
+
+        describe('.get', function() {
+            it('should work', function() {
+                expect(router.match('/', {method: 'get'}).components).toEqual(['list']);
+
+                expect(router.match('/foo', {method: 'get'})).toEqual({
+                    components: ['show'],
+                    params: {id: 'foo'}
+                });
+            });
+        });
+
+        describe('.post', function() {
+            it('should work', function() {
+                expect(router.match('/', {method: 'post'}).components).toEqual(['create']);
+            });
+        });
+
+        describe('.put', function() {
+            it('should work', function() {
+                expect(router.match('/foo', {method: 'put'})).toEqual({
+                    components: ['replace'],
+                    params: {id: 'foo'}
+                });
+            });
+        });
+
+        describe('.patch', function() {
+            it('should work', function() {
+                expect(router.match('/foo', {method: 'patch'})).toEqual({
+                    components: ['update'],
+                    params: {id: 'foo'}
+                });
+            });
+        });
+
+        describe('.delete', function() {
+            it('should work', function() {
+                expect(router.match('/foo', {method: 'delete'})).toEqual({
+                    components: ['remove'],
+                    params: {id: 'foo'}
+                });
+            });
+        });
+
+
+        describe('.options', function() {
+            it('should work', function() {
+                expect(router.match('/foo', {method: 'options'})).toEqual({
+                    components: ['all of them'],
+                    params: {id: 'foo'}
+                });
+            });
+        });
+    });
 });

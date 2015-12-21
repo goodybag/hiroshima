@@ -138,6 +138,36 @@ export class Router {
             return new MatchResult([], {});
         }
     }
+
+    // "RESTful" routing helper methods
+
+    get(handler) {
+        return this.where({method: 'get'}).index(handler);
+    }
+
+    head(handler) {
+        return this.where({method: 'head'}).index(handler);
+    }
+
+    post(handler) {
+        return this.where({method: 'post'}).index(handler);
+    }
+
+    put(handler) {
+        return this.where({method: 'put'}).index(handler);
+    }
+
+    patch(handler) {
+        return this.where({method: 'patch'}).index(handler);
+    }
+
+    delete(handler) {
+        return this.where({method: 'delete'}).index(handler);
+    }
+
+    options(handler) {
+        return this.where({method: 'options'}).index(handler);
+    }
 }
 
 export class MatchResult {
