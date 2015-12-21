@@ -146,10 +146,7 @@ describe('Router', function() {
             it('should work', function() {
                 expect(router.match('/', {method: 'get'}).components).toEqual(['list']);
 
-                expect(router.match('/foo', {method: 'get'})).toEqual({
-                    components: ['show'],
-                    params: {id: 'foo'}
-                });
+                expect(router.match('/foo', {method: 'get'}).components).toEqual(['show']);
             });
         });
 
@@ -161,38 +158,26 @@ describe('Router', function() {
 
         describe('.put', function() {
             it('should work', function() {
-                expect(router.match('/foo', {method: 'put'})).toEqual({
-                    components: ['replace'],
-                    params: {id: 'foo'}
-                });
+                expect(router.match('/foo', {method: 'put'}).components).toEqual(['replace']);
             });
         });
 
         describe('.patch', function() {
             it('should work', function() {
-                expect(router.match('/foo', {method: 'patch'})).toEqual({
-                    components: ['update'],
-                    params: {id: 'foo'}
-                });
+                expect(router.match('/foo', {method: 'patch'}).components).toEqual(['update']);
             });
         });
 
         describe('.delete', function() {
             it('should work', function() {
-                expect(router.match('/foo', {method: 'delete'})).toEqual({
-                    components: ['remove'],
-                    params: {id: 'foo'}
-                });
+                expect(router.match('/foo', {method: 'delete'}).components).toEqual(['remove']);
             });
         });
 
 
         describe('.options', function() {
             it('should work', function() {
-                expect(router.match('/foo', {method: 'options'})).toEqual({
-                    components: ['all of them'],
-                    params: {id: 'foo'}
-                });
+                expect(router.match('/foo', {method: 'options'}).components).toEqual(['all of them']);
             });
         });
     });
