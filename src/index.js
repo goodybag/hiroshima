@@ -1,3 +1,3 @@
 export {Router} from './router';
-export {Route} from './Route';
+export {Route} from './route';
 export {router} from './decorators';
