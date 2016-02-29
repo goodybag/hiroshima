@@ -1,10 +1,10 @@
 {
-    "presets": ["es2015"],
+    "presets": ["es2015-loose"],
     "plugins": [
-        "transform-object-rest-spread",
-        "transform-runtime",
-        "transform-decorators-legacy",
-        "transform-class-properties"
+        ["transform-object-rest-spread", {"loose": true}],
+        ["transform-runtime", {"polyfill": false}],
+        ["transform-class-properties", {"loose": true}],
+        "transform-decorators-legacy"
     ],
     "sourceMaps": true,
     "ignore": ["node_modules"]
