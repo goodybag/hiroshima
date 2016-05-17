@@ -116,8 +116,8 @@ export class Router {
     group(handler) {
         const router = new Router();
 
-        this.children.push(function(segments) {
-            return router.run(segments).withComponent(handler);
+        this.children.push(function(segments, data) {
+            return router.run(segments, data).withComponent(handler);
         });
 
         return router;
